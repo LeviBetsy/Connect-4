@@ -85,6 +85,7 @@ public class GameClass
 
     private boolean checkDiagonal(char[][] b)
     {
+        int count = 0;
         //first checking diagonals to the right until b[0][0] is reached
         for (int col = 3; col<0; col--)
         {
