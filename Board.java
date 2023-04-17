@@ -63,13 +63,46 @@ public class Board {
     }
 }
 
+import java.util.Scanner;
+
 class BoardTester {
     public static void main(String[] args) {
-        Board b = new Board();
-        b.addToken('X', 0);
-        b.addToken('O', 0);
-        b.addToken('X', 3);
-        b.printBoard();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Player 1 name: ");
+        String player1Name = scanner.nextLine();
+        System.out.println("Enter Player 2 name: ");
+        String player2Name = scanner.nextLine();
 
+        Board b = new Board();
+        char currentPlayer = 'X';
+
+        while (!b.isFull()) {
+            System.out.println(playerName(currentPlayer, player1Name, player2Name) + ", choose a column (0-6):");
+            int col = scanner.nextInt();
+            b.addToken(currentPlayer, col);
+            b.printBoard();
+
+            if (b.check()) {
+                System.out.println(playerName(currentPlayer, player1Name, player2Name) + " wins!");
+                break;
+            }
+
+            // switch the player
+            if (currentPlayer == 'X') {
+                currentPlayer = 'O';
+            } else {
+                currentPlayer = 'X';
+            }
+        }
     }
+
+    private static String playerName(char player, String player1Name, String player2Name) {
+        if (player == 'X') {
+            return player1Name;
+        } else {
+            return player2Name;
+        }
+    }
+}
+
 }
