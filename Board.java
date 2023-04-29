@@ -1,5 +1,10 @@
+import java.util.Scanner;
+
 public class Board {
-    private char[][] board = new char[7][6];
+    private final int board_height = 6;
+    private final int board_width = 7;
+    private char[][] board = new char[board_width][board_height];
+    private char currentPlayer = 'X';
 
     // colors
     public static final String ANSI_RESET = "\u001B[0m";
@@ -9,9 +14,10 @@ public class Board {
     public void addToken(char player, int col) {
         // only add when collumn is not full
         if (this.isCollumnFull(col) == true) {
-            System.out.println("Collumn is full");
+            System.out.println("Collumn is full, please pick another one");
+
         } else {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < board_height; i++) {
                 if (board[col][i] == '\0') {
                     board[col][i] = player;
                     break;
@@ -23,22 +29,22 @@ public class Board {
 
     public boolean isCollumnFull(int col) {
         // only checking the top row
-        if (board[col][5] != '\0') {
+        if (board[col][board_height - 1] != '\0') {
             return true;
         } else {
             return false;
         }
     }
 
-    public char[][] returnBoard() {
+    public char[][] getBoard() {
         return board;
     }
 
     public void printBoard() {
         // loop through every row starting from the top
-        for (int i = 5; i >= 0; i--) {
+        for (int i = board_height - 1; i >= 0; i--) {
             // loop through every collumn
-            for (int j = 0; j < 7; j++) {
+            for (int j = 0; j < board_width; j++) {
                 // if it's an X then print it out as a red O
                 if (board[j][i] == 'X') {
                     System.out.print('|' + ANSI_RED + 'O' + ANSI_RESET);
@@ -51,6 +57,11 @@ public class Board {
             }
             System.out.print("| \n");
         }
+
+        // printing index for reference
+        for (int i = 0; i < board_width; i++) {
+            System.out.print(" " + i);
+        }
     }
 
     public boolean isFull() {
@@ -61,12 +72,23 @@ public class Board {
         }
         return true;
     }
-}
 
-import java.util.Scanner;
+    public void changeTurn() {
+        if (currentPlayer == 'X') {
+            currentPlayer = 'O';
+        } else {
+            currentPlayer = 'X';
+        }
+    }
+
+    public char getPlayer() {
+        return currentPlayer;
+    }
+}
 
 class BoardTester {
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Player 1 name: ");
         String player1Name = scanner.nextLine();
@@ -74,26 +96,50 @@ class BoardTester {
         String player2Name = scanner.nextLine();
 
         Board b = new Board();
-        char currentPlayer = 'X';
 
         while (!b.isFull()) {
-            System.out.println(playerName(currentPlayer, player1Name, player2Name) + ", choose a column (0-6):");
-            int col = scanner.nextInt();
-            b.addToken(currentPlayer, col);
             b.printBoard();
+            System.out.println("");
 
-            if (b.check()) {
-                System.out.println(playerName(currentPlayer, player1Name, player2Name) + " wins!");
-                break;
+            System.out.println("Enter 'r' to undo turn");
+            System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + ", choose a column (0-6):");
+
+            // keep asking for input until broken out of loop
+            while (true) {
+                String col = scanner.nextLine();
+                // if user press 'r' they want to undo
+                if (col.equals("r")) {
+                    System.out.println("Dipshit");
+                } else {
+                    // try to see if user input an integer
+                    try {
+                        if (b.isCollumnFull(Integer.parseInt(col))) {
+                            System.out.println("Collumn is full, choose another collumn");
+                        } else {
+                            b.addToken(b.getPlayer(), Integer.parseInt(col));
+                            break;
+                        }
+                    } // if they didn't put in an integer catch exception
+                    catch (Exception e) {
+                        System.out.println("Your input is not valid, try again");
+                    }
+                }
             }
 
-            // switch the player
-            if (currentPlayer == 'X') {
-                currentPlayer = 'O';
-            } else {
-                currentPlayer = 'X';
-            }
+            // switching player
+            b.changeTurn();
+
         }
+
+        // if (b.check()) {
+        // System.out.println(playerName(currentPlayer, player1Name, player2Name) + "
+        // wins!");
+        // break;
+        // }
+
+        System.out.println("");
+        scanner.close();
+
     }
 
     private static String playerName(char player, String player1Name, String player2Name) {
@@ -103,6 +149,4 @@ class BoardTester {
             return player2Name;
         }
     }
-}
-
 }
