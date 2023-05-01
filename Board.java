@@ -5,11 +5,20 @@ public class Board {
     private final int board_width = 7;
     private char[][] board = new char[board_width][board_height];
     private char currentPlayer = 'X';
+    private Checker chec = new Checker();
+
+    public void setBoard(char[][] newb) {
+        this.board = newb;
+    }
 
     // colors
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_YELLOW = "\u001B[33m";
+
+    public boolean checkBoard() {
+        return chec.check(board);
+    }
 
     public void addToken(char player, int col) {
         // only add when collumn is not full
@@ -24,7 +33,7 @@ public class Board {
                 }
             }
         }
-        // need to do check if collumn is full
+        // check for winner
     }
 
     public boolean isCollumnFull(int col) {
@@ -83,70 +92,5 @@ public class Board {
 
     public char getPlayer() {
         return currentPlayer;
-    }
-}
-
-class BoardTester {
-    public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter Player 1 name: ");
-        String player1Name = scanner.nextLine();
-        System.out.println("Enter Player 2 name: ");
-        String player2Name = scanner.nextLine();
-
-        Board b = new Board();
-
-        while (!b.isFull()) {
-            b.printBoard();
-            System.out.println("");
-
-            System.out.println("Enter 'r' to undo turn");
-            System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + ", choose a column (0-6):");
-
-            // keep asking for input until broken out of loop
-            while (true) {
-                String col = scanner.nextLine();
-                // if user press 'r' they want to undo
-                if (col.equals("r")) {
-                    System.out.println("Dipshit");
-                } else {
-                    // try to see if user input an integer
-                    try {
-                        if (b.isCollumnFull(Integer.parseInt(col))) {
-                            System.out.println("Collumn is full, choose another collumn");
-                        } else {
-                            b.addToken(b.getPlayer(), Integer.parseInt(col));
-                            break;
-                        }
-                    } // if they didn't put in an integer catch exception
-                    catch (Exception e) {
-                        System.out.println("Your input is not valid, try again");
-                    }
-                }
-            }
-
-            // switching player
-            b.changeTurn();
-
-        }
-
-        // if (b.check()) {
-        // System.out.println(playerName(currentPlayer, player1Name, player2Name) + "
-        // wins!");
-        // break;
-        // }
-
-        System.out.println("");
-        scanner.close();
-
-    }
-
-    private static String playerName(char player, String player1Name, String player2Name) {
-        if (player == 'X') {
-            return player1Name;
-        } else {
-            return player2Name;
-        }
     }
 }
