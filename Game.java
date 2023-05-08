@@ -20,7 +20,8 @@ public class Game {
             System.out.println("");
 
             System.out.println("Enter 'r' to undo turn");
-            System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + ", choose a column (0-6):");
+            System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + playerColor(b.getPlayer())
+                    + ", choose a column (0-6):");
 
             // keep asking for input until broken out of loop
             while (true) {
@@ -53,7 +54,8 @@ public class Game {
 
                             if (b.checkBoard()) {
                                 System.out.println(" ");
-                                System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + " won!");
+                                System.out.println(playerName(b.getPlayer(), player1Name, player2Name) + " "
+                                        + playerColor(b.getPlayer()) + " won!");
                                 someoneWon = true;
                                 b.printBoard();
                             }
@@ -82,6 +84,14 @@ public class Game {
             return player1Name;
         } else {
             return player2Name;
+        }
+    }
+
+    private static String playerColor(char player) {
+        if (player == 'X') {
+            return " (red)";
+        } else {
+            return " (yellow)";
         }
     }
 }

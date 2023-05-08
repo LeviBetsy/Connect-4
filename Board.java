@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class Board {
     private final int board_height = 6;
@@ -74,7 +73,7 @@ public class Board {
     }
 
     public boolean isFull() {
-        for (int col = 0; col < 7; col++) {
+        for (int col = 0; col < board_width; col++) {
             if (board[col][5] == '\0') {
                 return false;
             }
